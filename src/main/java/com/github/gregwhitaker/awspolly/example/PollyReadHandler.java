@@ -45,7 +45,7 @@ public class PollyReadHandler implements Handler {
 
         SynthesizeSpeechResult result = polly.synthesizeSpeech(ssRequest);
 
-        System.out.println("Handling request...");
+        System.out.println("Handling request..." + result.getContentType());
         
         ctx.getResponse().contentType(result.getContentType());
         ctx.getResponse().sendStream(s -> s.onSubscribe(new Subscription() {
@@ -54,13 +54,17 @@ public class PollyReadHandler implements Handler {
                 try {
                     byte[] data      = new byte[1024];
                     int bytesRead = result.getAudioStream().read(data);
-
+                    System.out.println("Chunk from aws " + bytesRead);
                     while(bytesRead != -1) {
                         s.onNext(Unpooled.wrappedBuffer(data));
                         bytesRead = result.getAudioStream().read(data);
                     }
                     System.out.println("Done stream");
                 } catch (IOException e) {
+                    e.printStackTrace();
+                    ctx.getResponse().status(500);
+                    ctx.getResponse().send();
+                } catch (Throwable e) {
                     e.printStackTrace();
                     ctx.getResponse().status(500);
                     ctx.getResponse().send();

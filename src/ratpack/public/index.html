@@ -76,6 +76,7 @@
         // manipulated
         document.addEventListener("DOMContentLoaded", function () {
             var input = document.getElementById('input'),
+                formatsMenu = document.getElementById('format'),
                 voiceMenu = document.getElementById('voice'),
                 text = document.getElementById('text'),
                 player = document.getElementById('player'),
@@ -91,6 +92,22 @@
                     ' one.');
             }
 
+            if (true) {
+                    var container = document.createDocumentFragment();
+
+                    // Build the list of options for the menu
+                    supportedFormats.forEach(function (format) {
+                        var option = document.createElement('option');
+                        option.value = format;
+                        option.innerHTML = AUDIO_FORMATS[format];
+                        container.appendChild(option);
+                    });
+
+                    // Add the options to the menu and enable the form field
+                    formatMenu.appendChild(container);
+                    formatMenu.disabled = false;
+                
+            }
             // Play the audio stream when the form is submitted successfully
             input.addEventListener('submit', function (event) {
                 // Validate the fields in the form, display a message if
@@ -101,12 +118,15 @@
                     var selectedVoice = voiceMenu
                         .options[voiceMenu.selectedIndex]
                         .value;
-
+                    var selectedFormat = formatMenu
+                        .options[formatMenu.selectedIndex]
+                        .value;
+                    
                     // Point the player to the streaming server
                     player.src = '/read?voiceId=' +
                         encodeURIComponent(selectedVoice) +
                         '&text=' + encodeURIComponent(text.value) +
-                        '&outputFormat=' + supportedFormats[0];
+                        '&outputFormat=' + encodeURIComponent(selectedFormat.value);
                     player.play();
                 }
 
@@ -171,6 +191,12 @@
 
 <body>
 <form id="input" method="GET" action="/read">
+    <div>
+        <label for="format">Select a format:</label>
+        <select id="format" name="format" disabled>
+            <option value="">Choose an output format...</option>
+        </select>
+    </div>
     <div>
         <label for="voice">Select a voice:</label>
         <select id="voice" name="voiceId" disabled>

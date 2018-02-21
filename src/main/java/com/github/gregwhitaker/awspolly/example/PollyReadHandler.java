@@ -58,6 +58,7 @@ public class PollyReadHandler implements Handler {
                         bytesRead = result.getAudioStream().read(data);
                     }
                 } catch (IOException e) {
+                    e.printStackTrace();
                     ctx.getResponse().status(500);
                     ctx.getResponse().send();
                 } finally {

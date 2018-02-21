@@ -52,14 +52,14 @@ public class PollyReadHandler implements Handler {
             @Override
             public void request(long n) {
                 try {
-                    byte[] data      = new byte[1024];
+                    byte[] data      = new byte[4096];
                     int bytesRead = result.getAudioStream().read(data);
                     System.out.println("Chunk from aws " + bytesRead);
                     while(bytesRead != -1) {
                         s.onNext(Unpooled.wrappedBuffer(data));
                         bytesRead = result.getAudioStream().read(data);
                     }
-                    System.out.println("Done stream");
+                    //System.out.println("Done stream");
                 } catch (IOException e) {
                     e.printStackTrace();
                     ctx.getResponse().status(500);

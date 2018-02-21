@@ -26,7 +26,7 @@ repositories {
 
 dependencies {
     compile ratpack.dependency("guice")
-    compile 'com.amazonaws:aws-java-sdk-polly:1.11.75'
+    compile 'com.amazonaws:aws-java-sdk-polly:1.11.283'
 
     runtime 'org.slf4j:slf4j-simple:1.7.22'
 }
